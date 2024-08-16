@@ -32,7 +32,7 @@ const DateInput = () => {
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            className="flex items-center bg-gray-200 text-black border-2 rounded p-2 w-[190px] h-[50px] focus:outline-none"
+            className="flex items-center bg-gray-200 text-black border-2 rounded p-2 min-w-[190px] h-[50px] focus:outline-none"
             maxDate={endDate !== null ? endDate : undefined}
             customInput={
               <div className="bg-gray-200 text-black border-2 rounded p-2 w-full cursor-pointer">
@@ -46,7 +46,7 @@ const DateInput = () => {
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            className="bg-gray-200 text-black border-2 rounded p-2 w-[190px] h-[50px] focus:outline-none"
+            className="bg-gray-200 text-black border-2 rounded p-2 min-w-[190px] h-[50px] focus:outline-none"
             minDate={startDate !== null ? startDate : undefined}
             customInput={
               <div className="flex items-center bg-gray-200 text-black border-2 rounded p-2 w-full cursor-pointer">
