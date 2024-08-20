@@ -6,11 +6,11 @@ import CarouselComp from '../components/carousel';
 
 const page = () => {
   return (
-    <div>
+    <main>
       <CarouselComp />
       <Search />
       <Card />
-    </div>
+    </main>
   );
 };
 
