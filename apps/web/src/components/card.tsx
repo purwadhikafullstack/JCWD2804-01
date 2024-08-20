@@ -1,13 +1,3 @@
-'use client';
-import * as React from 'react';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-
 const Card = () => {
   const [mounted, setMounted] = React.useState(false);
 
@@ -20,7 +10,7 @@ const Card = () => {
   }
 
   return (
-    <div className="flex justify-center bg-black text-white mb-96">
+     <div className="flex justify-center bg-black text-white mb-96">
       <Carousel className="w-[100%] h-full bg-gray-200 z-[0]">
         <CarouselContent>
           {Array.from({ length: 5 }).map((_, index) => (
