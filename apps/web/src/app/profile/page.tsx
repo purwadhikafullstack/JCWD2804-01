@@ -1,9 +1,41 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 
 const ProfilePage = () => {
+  // const [authToken, setAuthToken] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   const token = Cookies.get('LOGIN_INFO');
+
+  //   if (token) {
+  //     setAuthToken(token);
+  //   } else {
+  //     setAuthToken(null);
+  //   }
+  // }, []);
+
+  // if (!authToken) {
+  //   return (
+  //     <div className="flex justify-center items-center h-screen p-8 bg-azure-100">
+  //       <div className="text-center bg-white p-6 border border-gray-300 rounded-md shadow-md">
+  //         <h2 className="text-xl text-black font-semibold">
+  //           Kamu tidak bisa akses halaman ini
+  //         </h2>
+  //         <button
+  //           onClick={() => (window.location.href = '/loginpage')}
+  //           className="border-2 border-black mt-2 px-3 py-1 rounded-md bg-black text-white hover:bg-white hover:text-black"
+  //         >
+  //           Pergi Login
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <div className="flex justify-center items-center h-screen p-8 bg-azure-100">
       <Card className="w-full max-w-md p-6 bg-white border border-gray-300 rounded-md shadow-md">

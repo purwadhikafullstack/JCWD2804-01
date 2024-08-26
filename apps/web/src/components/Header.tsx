@@ -1,3 +1,4 @@
+'use client';
 export const Header = () => {
   return (
     <div className="flex justify-between items-center bg-white text-black py-4 px-10">
@@ -8,7 +9,7 @@ export const Header = () => {
       </div>
       <div className="flex gap-12 items-center">
         <div className="flex gap-6">
-          <a href="/" className="hover:underline">
+          <a href="/hotel" className="hover:underline">
             Hotel
           </a>
           <a href="/" className="hover:underline">
@@ -19,10 +20,16 @@ export const Header = () => {
           </a>
         </div>
         <div className="flex gap-4 items-center">
-          <button className="border-2 border-gray-500 py-1 px-2 rounded-md bg-black text-white hover:bg-white hover:text-black">
+          <button
+            onClick={() => (window.location.href = '/loginpage')}
+            className="border-2 border-gray-500 py-1 px-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
+          >
             Masuk
           </button>
-          <button className="border-2 border-gray-500 py-1 px-2 rounded-md bg-black text-white hover:bg-white hover:text-black">
+          <button
+            onClick={() => (window.location.href = '/registerpage')}
+            className="border-2 border-gray-500 py-1 px-2 rounded-md bg-black text-white hover:bg-white hover:text-black"
+          >
             Daftar
           </button>
         </div>
