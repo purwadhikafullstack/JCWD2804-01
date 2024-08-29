@@ -1,15 +1,12 @@
-import express, {
-  json,
-  urlencoded,
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  Router,
-} from 'express';
+import express, { json, urlencoded, Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { PORT } from './config';
-// import { SampleRouter } from './routers/sample.router';
+
+// Import routes
+import roomRoutes from './routers/roomRoutes';
+import roomAvailabilityRoutes from './routers/roomAvailRoutes';
+import peakSeasonRateRoutes from './routers/peakRoutes';
+import authRoutes from './routers/authRoutes'; // Import auth routes
 
 export default class App {
   private app: Express;
@@ -17,7 +14,6 @@ export default class App {
   constructor() {
     this.app = express();
     this.configure();
-    // this.routes();
     this.handleError();
   }
 
@@ -25,10 +21,20 @@ export default class App {
     this.app.use(cors());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
+    
+    // Add API routes
+    this.addRoutes();
+  }
+
+  private addRoutes(): void {
+    // Register the routes
+    this.app.use('/api/rooms', roomRoutes);
+    this.app.use('/api/rooms/:roomId/availability', roomAvailabilityRoutes);
+    this.app.use('/api/rooms/:roomId/peak-rates', peakSeasonRateRoutes);
+    this.app.use('/api/auth', authRoutes); // Add auth routes
   }
 
   private handleError(): void {
-    // not found
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes('/api/')) {
         res.status(404).send('Not found !');
@@ -37,28 +43,15 @@ export default class App {
       }
     });
 
-    // error
-    this.app.use(
-      (err: Error, req: Request, res: Response, next: NextFunction) => {
-        if (req.path.includes('/api/')) {
-          console.error('Error : ', err.stack);
-          res.status(500).send('Error !');
-        } else {
-          next();
-        }
-      },
-    );
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      if (req.path.includes('/api/')) {
+        console.error('Error : ', err.stack);
+        res.status(500).send('Error !');
+      } else {
+        next();
+      }
+    });
   }
-
-  // private routes(): void {
-  //   const sampleRouter = new SampleRouter();
-
-  //   this.app.get('/api', (req: Request, res: Response) => {
-  //     res.send(`Hello, Purwadhika Student API!`);
-  //   });
-
-  //   this.app.use('/api/samples', sampleRouter.getRouter());
-  // }
 
   public start(): void {
     this.app.listen(PORT, () => {

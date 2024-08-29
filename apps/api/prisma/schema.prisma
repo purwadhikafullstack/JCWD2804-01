@@ -8,112 +8,141 @@ datasource db {
 }
 
 model User {
-  user_id       Int      @id @default(autoincrement())
-  firstname     String   @db.VarChar(45)
-  lastname      String?  @db.VarChar(45)  // Optional
-  email         String   @db.VarChar(45) @unique
-  phonenumber   Float?   @db.Double       // Optional
-  password      String   @db.VarChar(255)
-  birth         String?  @db.VarChar(45)  // Optional
-  identitynumber Float?  @db.Double       // Optional
-  address       String?  @db.VarChar(45)  // Optional
-  gender        String?  @db.VarChar(45)  // Optional
-  role          Role     @default(USER)
-  profile_picture Int?
-  email_verified Boolean @db.TinyInt @default(false)
+  user_id         Int         @id @default(autoincrement())
+  firstname       String      @db.VarChar(45)
+  lastname        String?     @db.VarChar(45)  // Optional
+  email           String      @db.VarChar(45) @unique
+  phonenumber     String?     @db.VarChar(20)  // Changed to String to handle large numbers
+  password        String      @db.VarChar(255)
+  birth           String?     @db.VarChar(45)  // Optional
+  identitynumber  String?     @db.VarChar(20)  // Changed to String to handle large numbers
+  address         String?     @db.VarChar(255) // Optional, extended for better storage
+  gender          String?     @db.VarChar(45)  // Optional
+  role            Role        @default(USER)
+  verificationToken         String?  @db.VarChar(255) // Add this field for email verification
+  verificationTokenExpiry   DateTime? // Add this field to store token expiry
+  profilePicture  Int?
+  email_verified  Boolean     @db.TinyInt @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
   
   // Relations
-  Tenants       Tenant[]
-  Bookings      Booking[]
+  Tenants         Tenant[]
+  Bookings        Booking[]
 }
 
 model Tenant {
-  tenant_id       Int      @id @default(autoincrement())
-  user_id         Int
-  business_name   String   @db.VarChar(45)
-  business_address String  @db.VarChar(45)
-  business_phone  Float    @db.Double
-  Properties      Property[]
-  Sales_Reports   Sales_Report[]
-
-  User            User     @relation(fields: [user_id], references: [user_id])
+  tenant_id        Int          @id @default(autoincrement())
+  user_id          Int
+  business_name    String       @db.VarChar(45)
+  business_address String       @db.VarChar(255) // Extended for better storage
+  business_phone   String       @db.VarChar(20)  // Changed to String to handle large numbers
+  
+  // Relations
+  User             User         @relation(fields: [user_id], references: [user_id])
+  Properties       Property[]
+  Sales_Reports    Sales_Report[]
 }
 
 model Property {
-  property_id      Int      @id @default(autoincrement())
-  tenant_id        Int
-  property_name    String   @db.VarChar(45)
-  property_location String  @db.MediumText
-  description      String   @db.LongText
-  category_id      Int
-  is_available     Boolean  @db.TinyInt
-  property_picture String   @db.VarChar(45)
+  property_id       Int          @id @default(autoincrement())
+  tenant_id         Int
+  property_name     String       @db.VarChar(45)
+  property_location String       @db.MediumText
+  description       String       @db.LongText
+  category_id       Int
+  is_available      Boolean      @db.TinyInt
+  property_picture  String       @db.VarChar(255) // Extended for better storage
   
   // Relations
-  Tenants          Tenant   @relation(fields: [tenant_id], references: [tenant_id])
-  Rooms            Room[]
-  Sales_Reports    Sales_Report[]
-  Reviews          Review[]
+  Tenant            Tenant       @relation(fields: [tenant_id], references: [tenant_id])
+  Rooms             Room[]
+  Sales_Reports     Sales_Report[]
+  Reviews           Review[]
 }
 
 model Room {
-  room_id          Int      @id @default(autoincrement())
+  room_id          Int        @id @default(autoincrement())
   property_id      Int
-  room_type        String   @db.VarChar(45)
-  price            Decimal  @db.Decimal(12, 2)
-  description      String   @db.LongText
-  is_available     Boolean  @db.TinyInt
-  room_picture     String   @db.VarChar(45)
-  adjustprice      Decimal  @db.Decimal(12, 2)
+  room_type        String     @db.VarChar(45)
+  price            Decimal    @db.Decimal(12, 2)
+  description      String     @db.LongText
+  is_available     Boolean    @db.TinyInt
+  room_picture     String     @db.VarChar(255) // Extended for better storage
+  adjustprice      Decimal    @db.Decimal(12, 2)
   occupants        Int
-  
+  RoomAvailability RoomAvailability[]
+  PeakSeasonRate   PeakSeasonRate[]
+
   // Relations
+  Property         Property   @relation(fields: [property_id], references: [property_id])
   Bookings         Booking[]
-  Property         Property @relation(fields: [property_id], references: [property_id])
+}
+
+model RoomAvailability {
+  availability_id Int      @id @default(autoincrement())
+  room_id         Int
+  start_date      DateTime
+  end_date        DateTime
+  is_available    Boolean  // True if room is available in this date range
+
+  // Relations
+  Room            Room     @relation(fields: [room_id], references: [room_id])
+}
+
+model PeakSeasonRate {
+  peak_rate_id    Int      @id @default(autoincrement())
+  room_id         Int
+  start_date      DateTime
+  end_date        DateTime
+  rate_change     Decimal  @db.Decimal(5, 2)  // Percentage change or absolute value
+
+  // Relations
+  Room            Room     @relation(fields: [room_id], references: [room_id])
 }
 
 model Booking {
-  booking_id       Int      @id @default(autoincrement())
+  booking_id       Int        @id @default(autoincrement())
   user_id          Int
   room_id          Int
-  check_in         String   @db.VarChar(45)
-  check_out        String   @db.VarChar(45)
-  status           String   @db.VarChar(45)
-  total_price      Decimal  @db.Decimal(12, 2)
-  payment_proof    String   @db.VarChar(45)
+  check_in         DateTime   // Changed to DateTime for proper date handling
+  check_out        DateTime   // Changed to DateTime for proper date handling
+  status           String     @db.VarChar(45)
+  total_price      Decimal    @db.Decimal(12, 2)
+  payment_proof    String     @db.VarChar(255) // Extended for better storage
   
   // Relations
-  User             User     @relation(fields: [user_id], references: [user_id])
-  Room             Room     @relation(fields: [room_id], references: [room_id])
+  User             User       @relation(fields: [user_id], references: [user_id])
+  Room             Room       @relation(fields: [room_id], references: [room_id])
   Reviews          Review[]
 }
 
 model Review {
-  review_id       Int      @id @default(autoincrement())
+  review_id       Int         @id @default(autoincrement())
   booking_id      Int
   property_id     Int
-  comment         String   @db.MediumText
-  tenant_replay   String   @db.MediumText
+  comment         String      @db.MediumText
+  tenant_replay   String      @db.MediumText
   star_rating     Int
   total_reviews   Int
   average_rating  Int
   
   // Relations
-  Property        Property @relation(fields: [property_id], references: [property_id])
-  Booking         Booking  @relation(fields: [booking_id], references: [booking_id])
+  Property        Property    @relation(fields: [property_id], references: [property_id])
+  Booking         Booking     @relation(fields: [booking_id], references: [booking_id])
 }
 
 model Sales_Report {
-  report_id       Int      @id @default(autoincrement())
+  report_id       Int        @id @default(autoincrement())
   tenant_id       Int
   property_id     Int
-  total_sales     Decimal  @db.Decimal(12, 2)
+  total_sales     Decimal    @db.Decimal(12, 2)
   start_date      DateTime
   end_date        DateTime
   
   // Relations
-  Tenant          Tenant   @relation(fields: [tenant_id], references: [tenant_id])
-  Property        Property @relation(fields: [property_id], references: [property_id])
+  Tenant          Tenant     @relation(fields: [tenant_id], references: [tenant_id])
+  Property        Property   @relation(fields: [property_id], references: [property_id])
 }
 
 enum Role {

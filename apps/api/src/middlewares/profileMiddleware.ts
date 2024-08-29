@@ -3,7 +3,7 @@ import { updateProfile } from '../services/profileService';
 import { AuthenticatedRequest } from '../middlewares/authMiddleware';
 
 export const updateProfileController = async (req: AuthenticatedRequest, res: Response) => {
-  const userId = req.user.id; // Accessing the user ID from the token payload
+  const userId = req.user.id; 
   const { lastname, phonenumber, address, gender } = req.body;
 
   try {
