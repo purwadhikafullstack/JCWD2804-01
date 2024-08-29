@@ -1,27 +1,20 @@
-/*
-  Warnings:
-
-  - You are about to drop the `sample` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE `sample`;
-
 -- CreateTable
 CREATE TABLE `User` (
     `user_id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(45) NOT NULL,
-    `lastname` VARCHAR(45) NOT NULL,
+    `lastname` VARCHAR(45) NULL,
     `email` VARCHAR(45) NOT NULL,
-    `phonenumber` DOUBLE NOT NULL,
-    `password` VARCHAR(45) NOT NULL,
-    `birth` VARCHAR(45) NOT NULL,
-    `identitynumber` DOUBLE NOT NULL,
-    `address` VARCHAR(45) NOT NULL,
-    `gender` VARCHAR(45) NOT NULL,
-    `role` VARCHAR(45) NOT NULL,
-    `profile_picture` INTEGER NULL,
-    `email_verified` BOOLEAN NOT NULL,
+    `phonenumber` VARCHAR(20) NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `birth` VARCHAR(45) NULL,
+    `identitynumber` VARCHAR(20) NULL,
+    `address` VARCHAR(255) NULL,
+    `gender` VARCHAR(45) NULL,
+    `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    `profilePicture` INTEGER NULL,
+    `email_verified` BOOLEAN NOT NULL DEFAULT false,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`user_id`)
@@ -32,8 +25,8 @@ CREATE TABLE `Tenant` (
     `tenant_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `business_name` VARCHAR(45) NOT NULL,
-    `business_address` VARCHAR(45) NOT NULL,
-    `business_phone` DOUBLE NOT NULL,
+    `business_address` VARCHAR(255) NOT NULL,
+    `business_phone` VARCHAR(20) NOT NULL,
 
     PRIMARY KEY (`tenant_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -47,7 +40,7 @@ CREATE TABLE `Property` (
     `description` LONGTEXT NOT NULL,
     `category_id` INTEGER NOT NULL,
     `is_available` BOOLEAN NOT NULL,
-    `property_picture` VARCHAR(45) NOT NULL,
+    `property_picture` VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (`property_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -60,7 +53,7 @@ CREATE TABLE `Room` (
     `price` DECIMAL(12, 2) NOT NULL,
     `description` LONGTEXT NOT NULL,
     `is_available` BOOLEAN NOT NULL,
-    `room_picture` VARCHAR(45) NOT NULL,
+    `room_picture` VARCHAR(255) NOT NULL,
     `adjustprice` DECIMAL(12, 2) NOT NULL,
     `occupants` INTEGER NOT NULL,
 
@@ -72,11 +65,11 @@ CREATE TABLE `Booking` (
     `booking_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `room_id` INTEGER NOT NULL,
-    `check_in` VARCHAR(45) NOT NULL,
-    `check_out` VARCHAR(45) NOT NULL,
+    `check_in` DATETIME(3) NOT NULL,
+    `check_out` DATETIME(3) NOT NULL,
     `status` VARCHAR(45) NOT NULL,
     `total_price` DECIMAL(12, 2) NOT NULL,
-    `payment_proof` VARCHAR(45) NOT NULL,
+    `payment_proof` VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (`booking_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
